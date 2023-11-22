@@ -1,0 +1,33 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "weather-app.fullname" . }}-cronjob
+spec:
+  schedule: "*/5 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: elasticsearch
+          containers:
+          - name: weather-script
+            image: sapirev/k8s-weather-app:latest
+            imagePullPolicy: Always
+            env:
+            - name: API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: weather-secret
+                  key: api_key
+            command:
+            - "/bin/bash"
+            - "-c"
+            - "python /app/weather-script.py"
+            volumeMounts:
+            - name: weather-secret
+              mountPath: /etc/secrets/weather-app
+          restartPolicy: OnFailure
+          volumes:
+          - name: weather-secret
+            secret:
+              secretName: weather-secret

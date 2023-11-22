@@ -1,0 +1,51 @@
+elasticsearch:
+  replicas: 1
+
+  rbac:
+    create: true
+    serviceAccountName: "elasticsearch"
+    automountToken: true
+
+  antiAffinity: "soft"
+
+  esJavaOpts: "-Xmx128m -Xms128m"
+
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "512M"
+    limits:
+      cpu: "1000m"
+      memory: "512M"
+
+  volumeClaimTemplate:
+    accessModes: [ "ReadWriteOnce" ]
+    storageClassName: "standard"
+    resources:
+      requests:
+        storage: 100M
+
+  service:
+    type: ClusterIP
+    ports:
+      - port: 9200
+        targetPort: 9200
+
+  readinessProbe:
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 3
+    timeoutSeconds: 30
+
+  ingress:
+    enabled: false
+    className: "nginx"
+    pathType: ImplementationSpecific
+    hosts:
+      - host: localhost
+        paths:
+          - path: /
+    service:
+      port:
+        number: 9200

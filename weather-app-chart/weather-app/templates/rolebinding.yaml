@@ -1,0 +1,12 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: weather-secret-reader-binding
+subjects:
+- kind: ServiceAccount
+  name: "elasticsearch"
+  namespace: "default"
+roleRef:
+  kind: Role
+  name: weather-secret-reader
+  apiGroup: rbac.authorization.k8s.io
