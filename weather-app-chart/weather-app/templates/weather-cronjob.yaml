@@ -14,6 +14,10 @@ spec:
             image: sapirev/k8s-weather-app:latest
             imagePullPolicy: Always
             env:
+            - name: NODE_NAME
+              value: "minikube"
+            - name: POD_NAME
+              value: "elasticsearch-master-0"
             - name: API_KEY
               valueFrom:
                 secretKeyRef:

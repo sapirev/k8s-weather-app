@@ -6,4 +6,4 @@ rules:
 - apiGroups: [""]
   resources: ["secrets", "serviceaccounts", "pods", "nodes"]
   verbs: ["get"]
-  resourceNames: ["weather-secret"]
+  resourceNames: ["weather-secret" , "elasticsearch-master-credentials"]
